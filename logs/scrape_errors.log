@@ -6,3 +6,9 @@
 2025-04-21 18:42:01,915 - ERROR - Attempt 2 failed for https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf: 415 Client Error: Unsupported Media Type for url: https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf
 2025-04-21 18:42:07,898 - ERROR - Attempt 3 failed for https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf: 415 Client Error: Unsupported Media Type for url: https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf
 2025-04-21 18:42:15,917 - ERROR - Failed permanently: https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf
+2025-04-21 19:28:32,617 - INFO - Found credentials in environment variables.
+2025-04-21 19:41:46,091 - ERROR - Attempt 1 failed for https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf: 415 Client Error: Unsupported Media Type for url: https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf
+2025-04-21 19:41:49,982 - ERROR - Attempt 2 failed for https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf: 415 Client Error: Unsupported Media Type for url: https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf
+2025-04-21 19:41:55,885 - ERROR - Attempt 3 failed for https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf: 415 Client Error: Unsupported Media Type for url: https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf
+2025-04-21 19:42:03,892 - ERROR - Failed permanently: https://data.udir.no/kl06/v201906/laereplaner-lk20/VAL0058.pdf
+2025-04-21 19:42:03,909 - INFO - Found credentials in environment variables.

@@ -10,7 +10,13 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 from PyPDF2 import PdfReader
 
-from utilities import RAW_DIR, PROCESSED_DIR, load_subject_map, log_error
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+from src.utilities import RAW_DIR, PROCESSED_DIR, load_subject_map, log_error
+from src.s3_upload import upload_directory
 
 BASE_URL = "https://data.udir.no/kl06/v201906/laereplaner-lk20/"
 ROOT_PAGE = "https://www.udir.no/lk20/"  # no longer used
@@ -67,6 +73,14 @@ def main():
                 log_error(f"Failed permanently: {url}")
     standardize_filenames()
     print("Download & processing complete.")
+    # Automatically upload processed PDFs to S3
+    bucket = os.getenv("AWS_S3_BUCKET")
+    prefix = os.getenv("AWS_S3_PREFIX", "")
+    if bucket:
+        print(f"Uploading processed PDFs to S3 bucket {bucket}/{prefix}")
+        upload_directory(bucket, prefix)
+    else:
+        print("No AWS_S3_BUCKET env var set; skipping S3 upload.")
 
 if __name__ == "__main__":
     main()
