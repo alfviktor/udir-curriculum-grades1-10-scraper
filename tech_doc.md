@@ -1,35 +1,40 @@
 # Purpose
-Provide each Lokalbank‑medlem en rask, lokal kopi av all offentlig kunde‑ og produktinformasjon (FAQ‑sider, PDF‑prislister, vilkår) som grunnlag for en demo‑chat.  
+This codebase is designed to automate the scraping, processing, and storage of podcast episode transcripts from the TakeoverPod website (https://www.takeoverpod.com/episodes). By building a reliable pipeline for transcript retrieval and preparation, we can support tasks such as vector indexing, search, and analysis of podcast content without manual intervention.
 
 ---
-## 1 · Mål
-* **Samle** åpent innhold fra ett bankdomene.
-* **Lagre** som JSON / markdown klar for vektor‑indeksering.
-* **Kjør** hele prosessen på < 15 min per bank.
+## 1. Goals
+* Collect publicly available episode pages and extract their transcripts.
+* Parse the transcript content embedded in the page via the DOM selector:
+  `document.querySelector("body > div > main > div > div > div.page-right.is-template-page-episode > section.section_transcript > div > div")`.
+* Clean and normalize text for consistency (remove HTML, speaker labels, timestamps).
+* Split transcripts into manageable token-limited chunks for downstream processing.
+* Store the prepared data in JSON Lines format for easy ingestion by vector databases.
 
 ---
-## 2 · Hovedsteg
-| Nr. | Steg | Verktøy | Kommentar |
-|---|---|---|---|
-| 1 | Last ned sitemap / bruteforce URL‑liste | `scrapy` + `robots.txt` respekt | Unngå innloggede / admin‑stier |
-| 2 | Hent HTML + PDF | `aiohttp` + `pdfminer.six` | Parallell, maks 8 samtidige requests |
-| 3 | Ekstrahér tekst | BeautifulSoup / PDF‑extract | Fjerner navigasjon, cookie‑bannere |
-| 4 | Del opp i chunks | Simple splitter (<= 512 tokens) | Beholder overskrift som metadata |
-| 5 | Lagre til disk | JSON Lines | Felt: `bank`, `url`, `title`, `chunk`, `tokens` |
+## 2. High-Level Steps
+| Step | Description | Tooling |
+|---|---|---|
+| 1 | Discover episode URLs | `aiohttp`, BeautifulSoup |
+| 2 | Fetch episode HTML | asynchronous HTTP client (`aiohttp`) |
+| 3 | Extract raw transcript | DOM parsing via BeautifulSoup |
+| 4 | Clean & normalize text | Python string operations |
+| 5 | Chunk text | custom splitter (≤512 tokens) |
+| 6 | Save output | JSON Lines (`.jsonl`) |
 
 ---
-## 3 · Mappe‑struktur (per bank)
+## 3. Directory Structure
 ```
-flekkefjord/
-  raw_html/
-  raw_pdf/
-  chunks.jsonl
+episodes/
+  raw_html/           # Original downloaded HTML pages
+  transcripts/        # Cleaned transcript text files
+  chunks.jsonl        # Tokenized chunks ready for indexing
 ```
 
 ---
-## 4 · Sikkerhet & Compliance
-* **Kun offentlige sider** – ingen cookies eller persondata.
-* **Kryptert trafikk (HTTPS)** når vi laster ned.
-* **Kilde‑lenke lagres** for transparens i chat‑svar.
+## 4. Compliance
+* Only public pages are accessed — no login or private endpoints.
+* Respect `robots.txt` and throttle requests (e.g., 1.5 s delay) to avoid overloading the server.
+* Store source URL metadata for traceability in downstream applications.
+
 ---
-_Rev. 26 Apr 2025 – Alf Viktor_
+_Rev. 27 Apr 2025 – Alf Viktor_
