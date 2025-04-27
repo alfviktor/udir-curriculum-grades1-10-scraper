@@ -27,6 +27,7 @@ from pathlib import Path
 import argparse
 import sys
 from typing import List
+import os
 
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError
@@ -35,6 +36,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from src.utilities import PROCESSED_DIR, log_error
+
+# Toggle: set environment variable ENABLE_S3_UPLOAD=1 to allow uploads
+ENABLE_S3_UPLOAD: bool = os.getenv("ENABLE_S3_UPLOAD", "0") == "1"
 
 
 def upload_directory(bucket: str, prefix: str = "") -> None:
@@ -51,6 +55,12 @@ def upload_directory(bucket: str, prefix: str = "") -> None:
         with a trailing slash if you want the files grouped inside a virtual
         directory.
     """
+
+    if not ENABLE_S3_UPLOAD:
+        log_error(
+            "S3 upload skipped – set environment variable ENABLE_S3_UPLOAD=1 to enable."
+        )
+        return
 
     s3 = boto3.client("s3")
 
